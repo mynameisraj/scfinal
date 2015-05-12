@@ -18,7 +18,7 @@ class NaiveBayes {
     // Used for Laplacian smoothing
     private let smoothingConstant = 1.0
     // When the value cannot be found, use this instead of 0 to avoid error
-    private let defaultLog = 0.00000001
+    private let defaultLog = 0.0000000000001
     private var labelCount = [String: Int]()
     private var features = Set<String>()
     private var probs = [String: [String: Double]]()
@@ -61,7 +61,7 @@ class NaiveBayes {
             if (totalLabelCount == 0) {
                 priors[label] = 0.0
             } else {
-                priors[label] = Double(labelCount[label]! / totalLabelCount)
+                priors[label] = Double(labelCount[label]!) / Double(totalLabelCount)
             }
         }
     }
@@ -75,16 +75,20 @@ class NaiveBayes {
                 var logVal = defaultLog
                 if probs[label]![feature] != nil {
                     logVal = log(probs[label]![feature]!)
+                } else {
+                    logVal = log(logVal)
                 }
                 result[label]! += logVal
             }
         }
 
-        var maxNumber = -1.0
+        var maxNumber: Double?
         var maxLabel: String?
         for (key, number) in result {
-            maxNumber = max(maxNumber, number)
-            maxLabel = key
+            if (maxNumber == nil || number > maxNumber) {
+                maxNumber = number
+                maxLabel = key
+            }
         }
         return maxLabel
     }
