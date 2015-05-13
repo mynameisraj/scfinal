@@ -35,8 +35,8 @@ class SCFMotionManager: NSObject {
     }
 
     // Transform data from this format to a classifiable format
-    class func getClassifiableDataFromRaw(data: [[CMAccelerometerData]]) -> [[String: Double]] {
-        var outData = [[String: Double]]()
+    class func getClassifiableDataFromRaw(data: [[CMAccelerometerData]], label: String) -> [NBData] {
+        var outData = [NBData]()
         for dataList in data {
             var currDict = [String: Double]()
             // Get the data in a more usable form for mean/stddev etc
@@ -64,7 +64,8 @@ class SCFMotionManager: NSObject {
             currDict["sy"] = sqrt(arrVar(y))
             currDict["sz"] = sqrt(arrVar(z))
 
-            outData.append(currDict)
+            let outNB = NBData(label: label, features: currDict)
+            outData.append(outNB)
         }
         return outData
     }

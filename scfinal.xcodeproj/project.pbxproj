@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3575121B1B02E7C400419E0B /* Surge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35F206F91B02AA8C00DC1D95 /* Surge.framework */; };
+		3575121C1B02E7C400419E0B /* Surge.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 35F206F91B02AA8C00DC1D95 /* Surge.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3581B2C91B017E3100C1AD79 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3581B2C81B017E3100C1AD79 /* CoreMotion.framework */; };
 		3581B2CB1B017E9900C1AD79 /* SCFMotionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3581B2CA1B017E9900C1AD79 /* SCFMotionManager.swift */; };
 		35CE81661AFFC95900E3AE31 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35CE81651AFFC95900E3AE31 /* AppDelegate.swift */; };
@@ -16,10 +18,16 @@
 		35CE81701AFFC95900E3AE31 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 35CE816E1AFFC95900E3AE31 /* LaunchScreen.xib */; };
 		35CE817C1AFFC95900E3AE31 /* scfinalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35CE817B1AFFC95900E3AE31 /* scfinalTests.swift */; };
 		35F206F21B026F3900DC1D95 /* SCFClassifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35F206F11B026F3900DC1D95 /* SCFClassifier.swift */; };
-		35F206FC1B02AABC00DC1D95 /* Surge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35F206F91B02AA8C00DC1D95 /* Surge.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		3575121D1B02E7C400419E0B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 35F206F31B02AA8C00DC1D95 /* Surge.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = F8A1E1A919917A79009735E2;
+			remoteInfo = Surge;
+		};
 		35CE81761AFFC95900E3AE31 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 35CE81581AFFC95900E3AE31 /* Project object */;
@@ -43,6 +51,20 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		3575121F1B02E7C500419E0B /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				3575121C1B02E7C400419E0B /* Surge.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		3581B2C81B017E3100C1AD79 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		3581B2CA1B017E9900C1AD79 /* SCFMotionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SCFMotionManager.swift; sourceTree = "<group>"; };
@@ -65,8 +87,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				35F206FC1B02AABC00DC1D95 /* Surge.framework in Frameworks */,
 				3581B2C91B017E3100C1AD79 /* CoreMotion.framework in Frameworks */,
+				3575121B1B02E7C400419E0B /* Surge.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -159,10 +181,12 @@
 				35CE815C1AFFC95900E3AE31 /* Sources */,
 				35CE815D1AFFC95900E3AE31 /* Frameworks */,
 				35CE815E1AFFC95900E3AE31 /* Resources */,
+				3575121F1B02E7C500419E0B /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				3575121E1B02E7C400419E0B /* PBXTargetDependency */,
 			);
 			name = scfinal;
 			productName = scfinal;
@@ -290,6 +314,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		3575121E1B02E7C400419E0B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Surge;
+			targetProxy = 3575121D1B02E7C400419E0B /* PBXContainerItemProxy */;
+		};
 		35CE81771AFFC95900E3AE31 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 35CE815F1AFFC95900E3AE31 /* scfinal */;

@@ -43,6 +43,8 @@ class SCFClassifier {
     private var means = [String: [String: Double]]()
     private var variances = [String: [String: Double]]()
 
+    var trained = false
+
     // P(x = v | c)
     func p(feature: String, label: String, v: Double) -> Double {
         return getProb(means[label]![feature]!, variances[label]![feature]!, v)
@@ -105,6 +107,8 @@ class SCFClassifier {
                 priors[label] = Double(labelCount[label]!) / Double(totalLabelCount)
             }
         }
+
+        trained = true
     }
 
     // Predict a value assuming its class is unknown

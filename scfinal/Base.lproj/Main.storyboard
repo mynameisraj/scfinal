@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6211" systemVersion="14A298i" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="vXZ-lx-hvc">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14E17e" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="vXZ-lx-hvc">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6204"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
         <scene sceneID="ufC-wZ-h7g">
             <objects>
-                <viewController id="vXZ-lx-hvc" customClass="ViewController" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="vXZ-lx-hvc" customClass="ViewController" customModule="scfinal" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="jyV-Pf-zRb"/>
                         <viewControllerLayoutGuide type="bottom" id="2fi-mo-0CV"/>
@@ -15,8 +15,79 @@
                     <view key="view" contentMode="scaleToFill" id="kh9-bI-dsS">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0A0-e8-Cfe">
+                                <rect key="frame" x="267" y="282" width="66" height="39"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                                <state key="normal" title="Train A">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="trainA:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="MDZ-di-Jzp"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pk3-1B-hHm">
+                                <rect key="frame" x="212.5" y="223" width="175" height="39"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                                <state key="normal" title="Get New Estimate">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="getEstimate:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="xde-Pw-fBS"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No Current Estimate" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GpI-mJ-aYj">
+                                <rect key="frame" x="176" y="170" width="248" height="33.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="28"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="xoF-td-NVY">
+                                <rect key="frame" x="290" y="120" width="20" height="20"/>
+                            </activityIndicatorView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="irh-vo-7Bx">
+                                <rect key="frame" x="266.5" y="341" width="67" height="39"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                                <state key="normal" title="Train B">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="trainB:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="W7b-OU-hvu"/>
+                                </connections>
+                            </button>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="0A0-e8-Cfe" firstAttribute="top" secondItem="pk3-1B-hHm" secondAttribute="bottom" constant="20" id="7uW-Ez-R0s"/>
+                            <constraint firstItem="irh-vo-7Bx" firstAttribute="top" secondItem="0A0-e8-Cfe" secondAttribute="bottom" constant="20" id="8pw-qG-87h"/>
+                            <constraint firstItem="pk3-1B-hHm" firstAttribute="top" secondItem="GpI-mJ-aYj" secondAttribute="bottom" constant="20" id="JeT-2x-7Ik"/>
+                            <constraint firstItem="GpI-mJ-aYj" firstAttribute="top" secondItem="xoF-td-NVY" secondAttribute="bottom" constant="30" id="KrZ-ik-OB1"/>
+                            <constraint firstAttribute="centerY" secondItem="xoF-td-NVY" secondAttribute="centerY" id="LJX-Lm-A0Z"/>
+                            <constraint firstAttribute="centerX" secondItem="irh-vo-7Bx" secondAttribute="centerX" id="LVi-LG-HbR"/>
+                            <constraint firstItem="0A0-e8-Cfe" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="26" id="Nan-UR-xkv"/>
+                            <constraint firstItem="xoF-td-NVY" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="100" id="OS1-L1-Yl1"/>
+                            <constraint firstAttribute="centerX" secondItem="pk3-1B-hHm" secondAttribute="centerX" constant="-1" id="QY8-U6-LaK"/>
+                            <constraint firstAttribute="centerX" secondItem="pk3-1B-hHm" secondAttribute="centerX" id="UyV-i5-qyK"/>
+                            <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="pk3-1B-hHm" secondAttribute="bottom" constant="228" id="WrY-sS-XQ5"/>
+                            <constraint firstAttribute="centerX" secondItem="GpI-mJ-aYj" secondAttribute="centerX" id="XZh-eh-Zzj"/>
+                            <constraint firstAttribute="centerX" secondItem="xoF-td-NVY" secondAttribute="centerX" id="YMA-dM-zZh"/>
+                            <constraint firstItem="GpI-mJ-aYj" firstAttribute="centerX" secondItem="pk3-1B-hHm" secondAttribute="centerX" constant="0.5" id="stg-Fs-Twd"/>
+                            <constraint firstAttribute="centerX" secondItem="0A0-e8-Cfe" secondAttribute="centerX" id="yns-ed-Rn8"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="stg-Fs-Twd"/>
+                                <exclude reference="LJX-Lm-A0Z"/>
+                                <exclude reference="QY8-U6-LaK"/>
+                                <exclude reference="Nan-UR-xkv"/>
+                                <exclude reference="WrY-sS-XQ5"/>
+                            </mask>
+                        </variation>
                     </view>
+                    <connections>
+                        <outlet property="activityView" destination="xoF-td-NVY" id="odW-W0-jk9"/>
+                        <outlet property="estimateLabel" destination="GpI-mJ-aYj" id="bCC-df-eXs"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
