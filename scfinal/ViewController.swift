@@ -35,6 +35,8 @@ class ViewController: UIViewController {
     }
 
     @IBAction func getEstimate(sender: UIButton) {
+        activityView?.startAnimating()
+
         SCFMotionManager.sharedInstance.gatherAccelerometerDataOnInterval(5.0, numDataPoints: 6, onComplete: { (data) in
             let transformedData = SCFMotionManager.getClassifiableDataFromRaw(data)
             let predictions = self.classifier.predictBatch(transformedData)
@@ -42,6 +44,7 @@ class ViewController: UIViewController {
             for prediction in predictions {
                 labelCount[prediction!]! += 1
             }
+            self.activityView?.stopAnimating()
             let predictedLabel = labelCount["ClassA"] > labelCount["ClassB"] ? "ClassA" : "ClassB"
             self.estimateLabel?.text = predictedLabel
         })
