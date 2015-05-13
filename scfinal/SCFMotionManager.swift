@@ -43,9 +43,9 @@ class SCFMotionManager: NSObject {
         var y = [Double]()
         var z = [Double]()
         for accel in data {
-            x.append(accel.acceleration.x)
-            y.append(accel.acceleration.y)
-            z.append(accel.acceleration.z)
+            x.append(accel.acceleration.x*10000)
+            y.append(accel.acceleration.y*10000)
+            z.append(accel.acceleration.z*10000)
         }
 
         // Compute FFT

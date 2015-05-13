@@ -16,7 +16,8 @@ struct NBData {
 
 // Normal distribution
 func getProb(meanVal: Double, varVal: Double, v: Double) -> Double {
-    return exp(-1*(v-meanVal)*(v-meanVal)/(2*varVal*varVal)) / sqrt(2*M_PI*varVal*varVal)
+    var d = exp(-1*(v-meanVal)*(v-meanVal)/(2*varVal*varVal)) / sqrt(2*M_PI*varVal*varVal)
+    return d
 }
 
 func arrVar(arr: [Double]) -> Double {
