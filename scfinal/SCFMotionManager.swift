@@ -22,17 +22,6 @@ func accelNorm(accel: CMAccelerometerData) -> Double {
     return sqrt(x*x + y*y + z*z)
 }
 
-func stdDev(arr: [Double]) -> Double {
-    let length = Double(arr.count)
-    let avg = arr.reduce(0, combine: {$0 + $1}) / length
-    let sumOfSquaredAvgDiff = arr.map { pow($0 - avg, 2.0)}.reduce(0, combine: {$0 + $1})
-    return sqrt(sumOfSquaredAvgDiff / length)
-}
-
-func arrMean(arr: [Double]) -> Double {
-    return arr.reduce(0, combine: {$0 + $1}) / Double(arr.count)
-}
-
 class SCFMotionManager: NSObject {
 
     static let sharedInstance = SCFMotionManager()

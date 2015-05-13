@@ -7,10 +7,28 @@
 //
 
 import Foundation
+import Darwin
 
 struct NBData {
     var label: String
-    var features: [String]
+    var features: [String: Double]
+}
+
+// Normal distribution
+func getProb(meanVal: Double, varVal: Double, v: Double) -> Double {
+    return exp(-1*(v-meanVal)*(v-meanVal)/(2*varVal*varVal)) / sqrt(2*M_PI*varVal*varVal)
+}
+
+
+func arrVar(arr: [Double]) -> Double {
+    let length = Double(arr.count)
+    let avg = arr.reduce(0, combine: {$0 + $1}) / length
+    let sumOfSquaredAvgDiff = arr.map { pow($0 - avg, 2.0)}.reduce(0, combine: {$0 + $1})
+    return sumOfSquaredAvgDiff / length
+}
+
+func arrMean(arr: [Double]) -> Double {
+    return arr.reduce(0, combine: {$0 + $1}) / Double(arr.count)
 }
 
 class NaiveBayes {
@@ -21,34 +39,57 @@ class NaiveBayes {
     private let defaultLog = 0.0000000000001
     private var labelCount = [String: Int]()
     private var features = Set<String>()
-    private var probs = [String: [String: Double]]()
     private var priors = [String: Double]()
+
+    private var means = [String: [String: Double]]()
+    private var variances = [String: [String: Double]]()
+
+    // P(x = v | c)
+    func p(feature: String, label: String, v: Double) -> Double {
+        return getProb(means[label]![feature]!, variances[label]![feature]!, v)
+    }
+
+    // Transform data into a dictionary of label:feature:values
+    func calculateGaussian(data: [NBData]) {
+        var outData = [String: [String: [Double]]]()
+        for item in data {
+            for (feature, featureValue) in item.features {
+                if (outData[item.label] == nil) {
+                    outData[item.label] = [:]
+                }
+                if (outData[item.label]![feature] == nil) {
+                    outData[item.label]![feature] = [Double]()
+                }
+                outData[item.label]![feature]!.append(featureValue)
+            }
+        }
+
+        for label in outData.keys {
+            for feature in outData[label]!.keys {
+                if (means[label] == nil) {
+                    means[label] = [:]
+                }
+                means[label]![feature] = arrMean(outData[label]![feature]!)
+
+                if (variances[label] == nil) {
+                    variances[label] = [:]
+                }
+                variances[label]![feature] = arrVar(outData[label]![feature]!)
+            }
+        }
+    }
 
     // Train using the given data
     func trainWithData(data: [NBData]) {
+        calculateGaussian(data)
+
         // Gather information on the training data set
         for item in data {
             let labelCountTemp = labelCount[item.label] ?? 0
             labelCount[item.label] = labelCountTemp + item.features.count
 
-            // Initialize probabilities if necessary
-            if probs[item.label] == nil {
-                probs[item.label] = [:]
-            }
-
-            for feature in item.features {
+            for feature in item.features.keys {
                 features.insert(feature)
-                let count = probs[item.label]![feature] ?? smoothingConstant
-                probs[item.label]![feature] = count + 1
-            }
-        }
-
-        // Compute probabilities based on values
-        for label in labelCount.keys {
-            let totalSum = Double(labelCount[label]! + features.count)
-            for feature in probs[label]!.keys {
-                let count = probs[label]![feature] ?? smoothingConstant
-                probs[label]![feature] = count / totalSum
             }
         }
 
@@ -67,18 +108,12 @@ class NaiveBayes {
     }
 
     // Predict a value assuming its class is unknown
-    func predict(item: [String]) -> String? {
+    func predict(item: [String: Double]) -> String? {
         var result = [String: Double]()
-        for label in probs.keys {
-            result[label] = log((priors[label])!)
-            for feature in item {
-                var logVal = defaultLog
-                if probs[label]![feature] != nil {
-                    logVal = log(probs[label]![feature]!)
-                } else {
-                    logVal = log(logVal)
-                }
-                result[label]! += logVal
+        for label in labelCount.keys {
+            result[label] = priors[label]
+            for (feature, featureValue) in item {
+                result[label] = result[label]! * p(feature, label: label, v: featureValue)
             }
         }
 
