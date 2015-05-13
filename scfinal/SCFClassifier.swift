@@ -19,7 +19,6 @@ func getProb(meanVal: Double, varVal: Double, v: Double) -> Double {
     return exp(-1*(v-meanVal)*(v-meanVal)/(2*varVal*varVal)) / sqrt(2*M_PI*varVal*varVal)
 }
 
-
 func arrVar(arr: [Double]) -> Double {
     let length = Double(arr.count)
     let avg = arr.reduce(0, combine: {$0 + $1}) / length
@@ -127,6 +126,15 @@ class SCFClassifier {
             }
         }
         return maxLabel
+    }
+
+    // Predict a large batch of data
+    func predictBatch(items: [[String: Double]]) -> [String?] {
+        var results = [String?]()
+        for item in items {
+            results.append(predict(item))
+        }
+        return results
     }
 
 }

@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreMotion
+import Surge
 
 // Maximum update interval, in seconds
 let maxInterval = 0.1
@@ -34,8 +35,38 @@ class SCFMotionManager: NSObject {
     }
 
     // Transform data from this format to a classifiable format
-    func transformData(data: [[CMAccelerometerData]]) {
-        
+    class func getClassifiableDataFromRaw(data: [[CMAccelerometerData]]) -> [[String: Double]] {
+        var outData = [[String: Double]]()
+        for dataList in data {
+            var currDict = [String: Double]()
+            // Get the data in a more usable form for mean/stddev etc
+            var x = [Double]()
+            var y = [Double]()
+            var z = [Double]()
+            for accel in dataList {
+                x.append(accel.acceleration.x)
+                y.append(accel.acceleration.y)
+                z.append(accel.acceleration.z)
+            }
+
+            // Compute FFT
+            currDict["fftx"] = arrMean(fft(x))
+            currDict["ffty"] = arrMean(fft(y))
+            currDict["fftz"] = arrMean(fft(z))
+
+            // Compute mean
+            currDict["mx"] = arrMean(x)
+            currDict["my"] = arrMean(y)
+            currDict["mz"] = arrMean(z)
+
+            // Compute standard deviation
+            currDict["sx"] = sqrt(arrVar(x))
+            currDict["sy"] = sqrt(arrVar(y))
+            currDict["sz"] = sqrt(arrVar(z))
+
+            outData.append(currDict)
+        }
+        return outData
     }
 
     func gatherAccelerometerDataOnInterval(interval: NSTimeInterval, numDataPoints: Int, onComplete: [[CMAccelerometerData]] -> ()) {
