@@ -1,5 +1,5 @@
 //
-//  NaiveBayes.swift
+//  SCFClassifier.swift
 //  scfinal
 //
 //  Created by Raj Ramamurthy on 5/12/15.
@@ -31,7 +31,7 @@ func arrMean(arr: [Double]) -> Double {
     return arr.reduce(0, combine: {$0 + $1}) / Double(arr.count)
 }
 
-class NaiveBayes {
+class SCFClassifier {
 
     // Used for Laplacian smoothing
     private let smoothingConstant = 1.0
@@ -100,6 +100,7 @@ class NaiveBayes {
                 totalLabelCount += labelVal
             }
             if (totalLabelCount == 0) {
+                // We have no data
                 priors[label] = 0.0
             } else {
                 priors[label] = Double(labelCount[label]!) / Double(totalLabelCount)
