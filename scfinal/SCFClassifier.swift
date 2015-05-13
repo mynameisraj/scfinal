@@ -16,7 +16,7 @@ struct NBData {
 
 // Normal distribution
 func getProb(meanVal: Double, varVal: Double, v: Double) -> Double {
-    var d = exp(-1*(v-meanVal)*(v-meanVal)/(2*varVal*varVal)) / sqrt(2*M_PI*varVal*varVal)
+    var d = -1*(v-meanVal)*(v-meanVal)/(2*varVal*varVal) - log(sqrt(2*M_PI*varVal*varVal))
     return d
 }
 
@@ -120,9 +120,12 @@ class SCFClassifier {
     func predict(item: [String: Double]) -> String? {
         var result = [String: Double]()
         for label in labelCount.keys {
-            result[label] = priors[label]
+            result[label] = log(priors[label]!+0.0000000000001)
             for (feature, featureValue) in item {
-                result[label] = result[label]! * p(feature, label: label, v: featureValue)
+                let z = p(feature, label: label, v: featureValue)
+                if (z != 0) {
+                    result[label] = result[label]! + log(z)
+                }
             }
         }
 
