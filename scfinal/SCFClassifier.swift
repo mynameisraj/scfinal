@@ -42,6 +42,7 @@ class SCFClassifier {
 
     private var means = [String: [String: Double]]()
     private var variances = [String: [String: Double]]()
+    private var allData = [NBData]()
 
     var trained = false
 
@@ -82,10 +83,13 @@ class SCFClassifier {
 
     // Train using the given data
     func trainWithData(data: [NBData]) {
-        calculateGaussian(data)
+        // Augment our current data
+        allData.extend(data)
+
+        calculateGaussian(allData)
 
         // Gather information on the training data set
-        for item in data {
+        for item in allData {
             let labelCountTemp = labelCount[item.label] ?? 0
             labelCount[item.label] = labelCountTemp + item.features.count
 
