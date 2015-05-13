@@ -42,7 +42,7 @@ class SCFClassifier {
 
     private var means = [String: [String: Double]]()
     private var variances = [String: [String: Double]]()
-    private var allData = [NBData]()
+    var allData = [NBData]()
 
     var trained = false
 

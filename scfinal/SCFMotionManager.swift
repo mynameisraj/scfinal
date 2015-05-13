@@ -29,7 +29,6 @@ class SCFMotionManager: NSObject {
     static let manager = CMMotionManager()
     private var currIndex = 0
     var lastData = [[CMAccelerometerData]]()
-    private var updating = false
 
     override init() {
         super.init()
@@ -79,9 +78,12 @@ class SCFMotionManager: NSObject {
     }
 
     // Transform data from this format to a classifiable format
-    class func getClassifiableDataFromRaw(data: [[CMAccelerometerData]], label: String) -> [[String: Double]] {
+    class func getClassifiableDataFromRaw(data: [[CMAccelerometerData]]) -> [[String: Double]] {
         var outData = [[String: Double]]()
         for dataList in data {
+            if (dataList.count == 0) {
+                continue
+            }
             let features = getFeatureDictFromRaw(dataList)
             outData.append(features)
         }
@@ -90,13 +92,12 @@ class SCFMotionManager: NSObject {
 
     // Continuously keep the window of data around. Must call stopAccelerometerUpdates after this
     func getLastWindowOnInterval(interval: NSTimeInterval, numDataPoints: Int) {
-        if (updating) {
-            return
-        }
-        updating = true
-        
-        for i in 0...numDataPoints {
-            lastData[i] = []
+        for i in 0...numDataPoints-1 {
+            if (lastData.count < numDataPoints) {
+                lastData.append([])
+            } else {
+                lastData[i] = []
+            }
         }
         var queue = NSOperationQueue()
         var startDate = NSDate()
@@ -108,13 +109,15 @@ class SCFMotionManager: NSObject {
                 self.lastData[self.currIndex] = curr
                 self.currIndex = self.currIndex == self.lastData.count ? 0 : self.currIndex+1
                 startDate = NSDate()
+                var date = NSDate()
+                println("Now pushing to \(self.currIndex) bucket at timestamp \(date)")
             }
             currentList.append(data)
         })
     }
 
     func gatherAccelerometerDataOnInterval(interval: NSTimeInterval, numDataPoints: Int, onComplete: [[CMAccelerometerData]] -> ()) {
-        let startDate = NSDate()
+        var startDate = NSDate()
         var allData = [[CMAccelerometerData]]()
 
         var currentList = [CMAccelerometerData]()
@@ -130,6 +133,7 @@ class SCFMotionManager: NSObject {
                 let curr = currentList
                 allData.append(curr)
                 currentList.removeAll()
+                startDate = NSDate()
             }
             currentList.append(data)
         })
