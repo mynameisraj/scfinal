@@ -119,6 +119,8 @@ class SCFMotionManager: NSObject {
 
         var currentList = [CMAccelerometerData]()
         var queue = NSOperationQueue()
+        // Stop all updates before we start again
+        SCFMotionManager.manager.stopAccelerometerUpdates()
         SCFMotionManager.manager.startAccelerometerUpdatesToQueue(queue, withHandler: { (data, error) in
             if allData.count > numDataPoints {
                 SCFMotionManager.manager.stopAccelerometerUpdates()
