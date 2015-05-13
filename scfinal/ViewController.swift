@@ -18,36 +18,38 @@ class ViewController: UIViewController {
         activityView?.startAnimating()
 
         // Train for 15 seconds
-        let manager = SCFMotionManager.sharedInstance
-        manager.gatherAccelerometerDataOnInterval(5.0, numDataPoints: 3, onComplete: { (data) in
+        SCFMotionManager.sharedInstance.gatherAccelerometerDataOnInterval(5.0, numDataPoints: 3, onComplete: { (data) in
             let transformedData = SCFMotionManager.getClassifiableDataFromRaw(data, label:"ClassA")
-            self.classifier.trainWithData(transformedData)
-            self.activityView?.stopAnimating()
-            println("Trained with \(transformedData.count) entries")
-            var alert = UIAlertController(title: nil, message: "Trained with \(transformedData.count) entries", preferredStyle: UIAlertControllerStyle.Alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
-            self.presentViewController(alert, animated: true, completion: nil)
+            self.gotData(transformedData)
         })
+        println("Got here first?")
     }
 
     @IBAction func trainB(sender: UIButton) {
         activityView?.startAnimating()
 
         // Train for 15 seconds
-        let manager = SCFMotionManager.sharedInstance
-        manager.gatherAccelerometerDataOnInterval(5.0, numDataPoints: 3, onComplete: { (data) in
+        SCFMotionManager.sharedInstance.gatherAccelerometerDataOnInterval(5.0, numDataPoints: 3, onComplete: { (data) in
             let transformedData = SCFMotionManager.getClassifiableDataFromRaw(data, label:"ClassB")
-            self.classifier.trainWithData(transformedData)
-            self.activityView?.stopAnimating()
-            println("Trained with \(transformedData.count) entries")
-            var alert = UIAlertController(title: nil, message: "Trained with \(transformedData.count) entries", preferredStyle: UIAlertControllerStyle.Alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
-            self.presentViewController(alert, animated: true, completion: nil)
+            self.gotData(transformedData)
         })
     }
 
     @IBAction func getEstimate(sender: UIButton) {
         // TODO
+    }
+
+    func gotData(data: [NBData]) {
+        self.classifier.trainWithData(data)
+        println("Trained with \(data.count) entries")
+        var alert = UIAlertController(title: nil, message: "Trained with \(data.count) entries", preferredStyle: UIAlertControllerStyle.Alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+        self.presentViewController(alert, animated: true, completion: {() in
+            self.activityView?.stopAnimating()
+        })
+
+        // Start the other updates
+        SCFMotionManager.sharedInstance.getLastWindowOnInterval(5.0, numDataPoints: 100)
     }
 
     override func viewDidLoad() {

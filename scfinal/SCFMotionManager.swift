@@ -27,6 +27,9 @@ class SCFMotionManager: NSObject {
 
     static let sharedInstance = SCFMotionManager()
     static let manager = CMMotionManager()
+    private var currIndex = 0
+    var lastData = [[CMAccelerometerData]]()
+    private var updating = false
 
     override init() {
         super.init()
@@ -68,6 +71,31 @@ class SCFMotionManager: NSObject {
             outData.append(outNB)
         }
         return outData
+    }
+
+    // Continuously keep the window of data around. Must call stopAccelerometerUpdates after this
+    func getLastWindowOnInterval(interval: NSTimeInterval, numDataPoints: Int) {
+        if (updating) {
+            return
+        }
+        updating = true
+        
+        for i in 0...numDataPoints {
+            lastData[i] = []
+        }
+        var queue = NSOperationQueue()
+        var startDate = NSDate()
+        var currentList = [CMAccelerometerData]()
+        SCFMotionManager.manager.startAccelerometerUpdatesToQueue(queue, withHandler: { (data, error) in
+            // Some work in here
+            if startDate.timeIntervalSinceNow * -1 > interval {
+                let curr = currentList
+                self.lastData[self.currIndex] = curr
+                self.currIndex = self.currIndex == self.lastData.count ? 0 : self.currIndex+1
+                startDate = NSDate()
+            }
+            currentList.append(data)
+        })
     }
 
     func gatherAccelerometerDataOnInterval(interval: NSTimeInterval, numDataPoints: Int, onComplete: [[CMAccelerometerData]] -> ()) {
