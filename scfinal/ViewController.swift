@@ -19,7 +19,7 @@ class ViewController: UIViewController {
 
         // Train for 15 seconds
         SCFMotionManager.sharedInstance.gatherAccelerometerDataOnInterval(5.0, numDataPoints: 3, onComplete: { (data) in
-            let transformedData = SCFMotionManager.getClassifiableDataFromRaw(data, label:"ClassA")
+            let transformedData = SCFMotionManager.getTrainingDataFromRaw(data, label:"ClassA")
             self.gotData(transformedData)
         })
         println("Got here first?")
@@ -30,13 +30,20 @@ class ViewController: UIViewController {
 
         // Train for 15 seconds
         SCFMotionManager.sharedInstance.gatherAccelerometerDataOnInterval(5.0, numDataPoints: 3, onComplete: { (data) in
-            let transformedData = SCFMotionManager.getClassifiableDataFromRaw(data, label:"ClassB")
+            let transformedData = SCFMotionManager.getTrainingDataFromRaw(data, label:"ClassB")
             self.gotData(transformedData)
         })
     }
 
     @IBAction func getEstimate(sender: UIButton) {
-        // TODO
+        let transformedData = SCFMotionManager.getClassifiableDataFromRaw(SCFMotionManager.sharedInstance.lastData, label: "")
+        let predictions = classifier.predictBatch(transformedData)
+        var labelCount = ["ClassA": 0, "ClassB": 0]
+        for prediction in predictions {
+            labelCount[prediction!]! += 1
+        }
+        let predictedLabel = labelCount["ClassA"] > labelCount["ClassB"] ? "ClassA" : "ClassB"
+        estimateLabel?.text = predictedLabel
     }
 
     func gotData(data: [NBData]) {
@@ -61,6 +68,5 @@ class ViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
 
 }

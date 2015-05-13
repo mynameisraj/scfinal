@@ -37,38 +37,53 @@ class SCFMotionManager: NSObject {
         SCFMotionManager.manager.accelerometerUpdateInterval = maxInterval
     }
 
-    // Transform data from this format to a classifiable format
-    class func getClassifiableDataFromRaw(data: [[CMAccelerometerData]], label: String) -> [NBData] {
+    class func getFeatureDictFromRaw(data: [CMAccelerometerData]) -> [String: Double] {
+        var currDict = [String: Double]()
+        // Get the data in a more usable form for mean/stddev etc
+        var x = [Double]()
+        var y = [Double]()
+        var z = [Double]()
+        for accel in data {
+            x.append(accel.acceleration.x)
+            y.append(accel.acceleration.y)
+            z.append(accel.acceleration.z)
+        }
+
+        // Compute FFT
+        currDict["fftx"] = arrMean(fft(x))
+        currDict["ffty"] = arrMean(fft(y))
+        currDict["fftz"] = arrMean(fft(z))
+
+        // Compute mean
+        currDict["mx"] = arrMean(x)
+        currDict["my"] = arrMean(y)
+        currDict["mz"] = arrMean(z)
+
+        // Compute standard deviation
+        currDict["sx"] = sqrt(arrVar(x))
+        currDict["sy"] = sqrt(arrVar(y))
+        currDict["sz"] = sqrt(arrVar(z))
+
+        return currDict
+    }
+
+    // Transform data from this format to a trainable format
+    class func getTrainingDataFromRaw(data: [[CMAccelerometerData]], label: String) -> [NBData] {
         var outData = [NBData]()
         for dataList in data {
-            var currDict = [String: Double]()
-            // Get the data in a more usable form for mean/stddev etc
-            var x = [Double]()
-            var y = [Double]()
-            var z = [Double]()
-            for accel in dataList {
-                x.append(accel.acceleration.x)
-                y.append(accel.acceleration.y)
-                z.append(accel.acceleration.z)
-            }
-
-            // Compute FFT
-            currDict["fftx"] = arrMean(fft(x))
-            currDict["ffty"] = arrMean(fft(y))
-            currDict["fftz"] = arrMean(fft(z))
-
-            // Compute mean
-            currDict["mx"] = arrMean(x)
-            currDict["my"] = arrMean(y)
-            currDict["mz"] = arrMean(z)
-
-            // Compute standard deviation
-            currDict["sx"] = sqrt(arrVar(x))
-            currDict["sy"] = sqrt(arrVar(y))
-            currDict["sz"] = sqrt(arrVar(z))
-
-            let outNB = NBData(label: label, features: currDict)
+            let features = getFeatureDictFromRaw(dataList)
+            let outNB = NBData(label: label, features: features)
             outData.append(outNB)
+        }
+        return outData
+    }
+
+    // Transform data from this format to a classifiable format
+    class func getClassifiableDataFromRaw(data: [[CMAccelerometerData]], label: String) -> [[String: Double]] {
+        var outData = [[String: Double]]()
+        for dataList in data {
+            let features = getFeatureDictFromRaw(dataList)
+            outData.append(features)
         }
         return outData
     }
